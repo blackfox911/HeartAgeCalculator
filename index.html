@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-US-CCompatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Heart Age Calculator.</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <main class="main">
+            <header class="header">
+                <img src = "logo.png"  class="new-logo">
+                <nav class="navbar">
+                    <a href="#" class="active">Home</a>
+                    <a href="#">About</a>
+                    <a href="#">Services</a>
+                    <a href="#">Contacts</a>
+                    <div class="hamburger-menu">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                    </div>
+                </nav>
+            </header>
+
+            <div class="container">
+                <section class="home">
+                <div class ='home-content'> 
+                        <h1>Heart Age Calculator.</h1>
+                        <p> Heart age calculator determines if your heart is how it should be for a healthy human being of your age.
+                            The heart age is estimated considering the points you get in each of the following questions:
+                            </p>
+                        <button class ="start-btn"> Start Quiz</button>      
+                </div>
+                </section>
+            </div>
+        </main>
+
+        <div class="popup-info">
+            <h1>Heart Age Calculator</h1>
+            <div class="question" id="genderQuestion">
+              <p>Gender:</p>
+              <input type="radio" name="gender" value="male"> Male
+              <input type="radio" name="gender" value="female"> Female
+              <button onclick="nextQuestion()">Next</button>
+            </div>
+            <div class="question" id="ageQuestion">
+              <p>Age:</p>
+              <input type="number" id="ageInput">
+              <button onclick="nextQuestion()">Next</button>
+            </div>
+            <div class="question" id="ldlQuestion">
+              <p>LDL Cholesterol Level:</p>
+              <input type="number" id="ldlInput">
+              <input type="checkbox" id="ldlUnknown"> I do not know
+              <button onclick="nextQuestion()">Next</button>
+            </div>
+            <div class="question" id="hdlQuestion">
+              <p>HDL Cholesterol Level:</p>
+              <input type="number" id="hdlInput">
+              <input type="checkbox" id="hdlUnknown"> I do not know
+              <button onclick="nextQuestion()">Next</button>
+            </div>
+            <div class="question" id="smokingQuestion">
+              <p>Do you smoke?</p>
+              <input type="radio" name="smoking" value="yes"> Yes
+              <input type="radio" name="smoking" value="no"> No
+              <button onclick="nextQuestion()">Next</button>
+            </div>
+            <div class="question" id="diabetesQuestion">
+              <p>Have you had diabetes before?</p>
+              <input type="radio" name="diabetes" value="yes"> Yes
+              <input type="radio" name="diabetes" value="no"> No
+              <button onclick="nextQuestion()">Next</button>
+            </div>
+            <div class="question" id="bloodPressureQuestion">
+              <p>Blood Pressure (mmHg):</p>
+              <input type="number" id="bloodPressureInput">
+              <input type="checkbox" id="bloodPressureUnknown"> I do not know
+              <button onclick="calculateHeartAge()">Calculate</button>
+            </div>
+            <div id="result"></div>
+            <div class="restart-container">
+              <button onclick="restart()">Start</button>
+            </div>
+
+        </div>
+        
+
+
+
+     <script src="script.js"></script>
+     <script>
+        let questions = document.querySelectorAll('.question');
+        let currentQuestionIndex = 0;
+
+        function nextQuestion() {
+        if (currentQuestionIndex < questions.length - 1) {
+            questions[currentQuestionIndex].style.display = 'none';
+            currentQuestionIndex++;
+            questions[currentQuestionIndex].style.display = 'block';
+        }
+        }
+
+        function calculateHeartAge() {
+        let age = parseInt(document.getElementById('ageInput').value);
+        let ldl = parseInt(document.getElementById('ldlInput').value);
+        let hdl = parseInt(document.getElementById('hdlInput').value);
+        let smoking = document.querySelector('input[name="smoking"]:checked').value;
+        let diabetes = document.querySelector('input[name="diabetes"]:checked').value;
+        let bloodPressure = parseInt(document.getElementById('bloodPressureInput').value);
+
+        if (document.getElementById('ldlUnknown').checked) {
+            ldl = 0;
+        } else {
+            ldl = isNaN(ldl) ? 0 : ldl;
+        }
+
+        if (document.getElementById('hdlUnknown').checked) {
+            hdl = 0;
+        } else {
+            hdl = isNaN(hdl) ? 0 : hdl;
+        }
+
+        if (document.getElementById('bloodPressureUnknown').checked) {
+            bloodPressure = 0;
+        } else {
+            bloodPressure = isNaN(bloodPressure) ? 0 : bloodPressure;
+        }
+
+        // Heart age calculation logic
+        let heartAge = age;
+
+        // Adjust heart age based on risk factors
+        if (smoking === 'yes') {
+            heartAge += 10; // Add 10 years for smokers
+        }
+
+        if (diabetes === 'yes') {
+            heartAge += 5; // Add 5 years for diabetes patients
+        }
+
+        // Adjust based on cholesterol levels
+        if (ldl >= 160) {
+            heartAge += 5; // Add 5 years for high LDL cholesterol
+        }
+
+        if (hdl < 40) {
+            heartAge += 5; // Add 5 years for low HDL cholesterol
+        }
+
+        // Adjust based on blood pressure
+        if (bloodPressure >= 140) {
+            heartAge += 5; // Add 5 years for high blood pressure
+        }
+
+        // Display the result
+        document.getElementById('result').innerHTML = `<p>Your heart age is: ${heartAge}</p>`;
+        }
+
+        function restart() {
+        currentQuestionIndex = 0;
+        questions.forEach(question => question.style.display = 'none');
+        questions[currentQuestionIndex].style.display = 'block';
+        document.getElementById('result').innerHTML = '';
+        }
+
+
+
+     </script>
+    
+     
+            
+    </body>
+</html>
